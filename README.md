@@ -1,4 +1,6 @@
-# AWS EC2
+# AWS EC2 Terraform
+
+Project used to learn AWS EC2, using both the CLI API and Terraform.
 
 ## Resouces
 
