@@ -4,7 +4,7 @@ AWS CLI commands used to prepare for, create and delte an AWS EC2 instance.
 
 ```SH
 # Displays the extensive CLI documentation.
-$ aws ec2 help
+aws ec2 help
 ```
 
 ## Key Pairs
@@ -17,13 +17,13 @@ See [Controlling command output from the AWS CLI](https://docs.aws.amazon.com/cl
 
 ```SH
 # Creates the key pair and a file containing the private key.
-$ aws ec2 create-key-pair --key-name ec2-ssh.eu-west-1 --query 'KeyMaterial' --output text > .ssh/ec2-ssh.eu-west-1
+aws ec2 create-key-pair --key-name ec2-ssh.eu-west-1 --query 'KeyMaterial' --output text > .ssh/ec2-ssh.eu-west-1
 ```
 
 ### List All Key Pairs
 
 ```SH
-$ aws ec2 describe-key-pairs
+aws ec2 describe-key-pairs
 {
     "KeyPairs": [
         {
@@ -39,7 +39,7 @@ $ aws ec2 describe-key-pairs
 ### Describe a Key Pair
 
 ```SH
-$ aws ec2 describe-key-pairs --key-name ec2-kp.eu-west-1
+aws ec2 describe-key-pairs --key-name ec2-kp.eu-west-1
 {
     "KeyPairs": [
         {
@@ -57,7 +57,7 @@ $ aws ec2 describe-key-pairs --key-name ec2-kp.eu-west-1
 
 ```SH
 # Delete a key pair by name. Other identifiers like --key-pair-id may be used.
-$ aws ec2 delete-key-pair --key-name ec2-ssh.eu-west-1
+aws ec2 delete-key-pair --key-name ec2-ssh.eu-west-1
 ```
 
 ## Security Groups
@@ -68,14 +68,14 @@ Security groups essentially operates as a firewall by providing rules that deter
 
 ```SH
 # List all security groups. Complete config is returned.
-$ aws ec2 describe-security-groups
+aws ec2 describe-security-groups
 ```
 
 ### Describe a Security Group
 
 ```SH
 # Security groups can only be references by the group id, not the name.
-$ aws ec2 describe-security-groups --group-ids <security-group-id>
+aws ec2 describe-security-groups --group-ids <security-group-id>
 {
     "SecurityGroups": [
         {
@@ -128,7 +128,7 @@ $ aws ec2 describe-security-groups --group-ids <security-group-id>
 Creating a security group is a two-step process. First, create the actual security group:
 
 ```SH
-$ aws ec2 create-security-group --group-name ec2-sg.eu-west-1.web --description 'Web access' --vpc-id <vpc-id>
+aws ec2 create-security-group --group-name ec2-sg.eu-west-1.web --description 'Web access' --vpc-id <vpc-id>
 {
     "GroupId": "<security-group-id>"
 }
@@ -138,13 +138,13 @@ Then add rules to the security group. See [authorize-security-group-ingress](htt
 
 ```SH
 # The rule below allows port 80 access from anywhere.
-$ aws ec2 authorize-security-group-ingress --group-id <security-group-id> --protocol tcp --port 80 --cidr '0.0.0.0/0'
+aws ec2 authorize-security-group-ingress --group-id <security-group-id> --protocol tcp --port 80 --cidr '0.0.0.0/0'
 
 # Adding the same rule for IPv6 addresses requires usage of the --ip-permissions option. This is the shorthand version.
-$ aws ec2 authorize-security-group-ingress --group-id <security-group-id> --ip-permissions IpProtocol=tcp,FromPort=80,ToPort=80,Ipv6Ranges='[{CidrIpv6=::/0}]'
+aws ec2 authorize-security-group-ingress --group-id <security-group-id> --ip-permissions IpProtocol=tcp,FromPort=80,ToPort=80,Ipv6Ranges='[{CidrIpv6=::/0}]'
 
 # The --ip-permissions options also accepts JSON, here with rules for both IPv4 and IPv6.
-$ aws ec2 authorize-security-group-ingress --group-id <security-group-id> --ip-permissions \
+aws ec2 authorize-security-group-ingress --group-id <security-group-id> --ip-permissions \
 '[
   {
     "FromPort": 443,
@@ -170,13 +170,13 @@ Deleting a security group is basically a reversal of the creation process. First
 
 ```SH
 # The rule below removes port 80 access from anywhere.
-$ aws ec2 revoke-security-group-ingress --group-id <security-group-id> --protocol tcp --port 80 --cidr '0.0.0.0/0'
+aws ec2 revoke-security-group-ingress --group-id <security-group-id> --protocol tcp --port 80 --cidr '0.0.0.0/0'
 
 # Removing the same rule for an IPv6 address requires usage of the --ip-permissions option. This is the shorthand version.
-$ aws ec2 revoke-security-group-ingress --group-id <security-group-id> --ip-permissions IpProtocol=tcp,FromPort=80,ToPort=80,Ipv6Ranges='[{CidrIpv6=::/0}]'
+aws ec2 revoke-security-group-ingress --group-id <security-group-id> --ip-permissions IpProtocol=tcp,FromPort=80,ToPort=80,Ipv6Ranges='[{CidrIpv6=::/0}]'
 
 # Using JSON, here with rules for both IPv4 and IPv6.
-$ aws ec2 revoke-security-group-ingress --group-id <security-group-id> --ip-permissions \
+aws ec2 revoke-security-group-ingress --group-id <security-group-id> --ip-permissions \
 '[
   {
     "FromPort": 443,
@@ -202,7 +202,7 @@ Then, delete the actual security group:
 
 ```SH
 # A security group can't be deleted if the group is currently attached to an environment.
-$ aws ec2 delete-security-group --group-id <security-group-id>
+aws ec2 delete-security-group --group-id <security-group-id>
 ```
 
 ## EC2 Instances
@@ -215,7 +215,7 @@ See [run-instances](https://awscli.amazonaws.com/v2/documentation/api/latest/ref
 
 ```SH
 # ami-063d4ab14480ac177 is Amazon Linux.
-$ aws ec2 run-instances --image-id  ami-063d4ab14480ac177 --count 1 --instance-type t2.micro --key-name ec2-kp.eu-west-1 --security-group-ids <security-group-id>
+aws ec2 run-instances --image-id  ami-063d4ab14480ac177 --count 1 --instance-type t2.micro --key-name ec2-kp.eu-west-1 --security-group-ids <security-group-id>
 ```
 
 ### Add Instance Storage
@@ -224,7 +224,7 @@ Use block device mapping to specify additional Amazon Elastic Block Store (Amazo
 
 ```SH
 # Provisions a standard Amazon EBS volume that is 10 GB in size, and maps it to your instance using the identifier /dev/sdf. DeleteOnTermination is false by default.
-$ aws ec2 run-instances --image-id ami-063d4ab14480ac177 --count 1 --instance-type t2.micro --key-name ec2-kp.eu-west-1 --security-group-ids <security-group-id> --block-device-mappings '[{"DeviceName":"/dev/sdf\","Ebs":{"VolumeSize":10, "DeleteOnTermination":false}}]'
+aws ec2 run-instances --image-id ami-063d4ab14480ac177 --count 1 --instance-type t2.micro --key-name ec2-kp.eu-west-1 --security-group-ids <security-group-id> --block-device-mappings '[{"DeviceName":"/dev/sdf\","Ebs":{"VolumeSize":10, "DeleteOnTermination":false}}]'
 ```
 
 The above EBS block storage is not deleted when the instance is terminated. The preserved volume can be attached to another running instance using [attach-volume](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/attach-volume.html) or deleted when not attached to any instances by using [delete-volume](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/delete-volume.html). Use [describe-volums](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/describe-volumes.html) to list all volumes.
@@ -233,7 +233,7 @@ If a snapshot (copy) of the volume is created, the snapshot can be used when cre
 
 ```SH
 # The following example adds an Amazon EBS volume, mapped to /dev/sdf, based on an existing snapshot.
-$ aws ec2 run-instances --image-id ami-063d4ab14480ac177 --count 1 --instance-type t2.micro --key-name ec2-kp.eu-west-1 --security-group-ids <security-group-id> --block-device-mappings '[{"DeviceName":"/dev/sdf","Ebs":{"SnapshotId":"snap-0f43df9d631e0cba1", "DeleteOnTermination":true}}]'
+aws ec2 run-instances --image-id ami-063d4ab14480ac177 --count 1 --instance-type t2.micro --key-name ec2-kp.eu-west-1 --security-group-ids <security-group-id> --block-device-mappings '[{"DeviceName":"/dev/sdf","Ebs":{"SnapshotId":"snap-0f43df9d631e0cba1", "DeleteOnTermination":true}}]'
 ```
 
 ### Add Instance Tag
@@ -242,7 +242,7 @@ A tag enables adding metadata to a resources that you can use for a variety of p
 
 ```SH
 # Add a single tag to a specified instance.
-$ aws ec2 create-tags --resources <instance-id> --tags Key=Name,Value=AwsCertification
+aws ec2 create-tags --resources <instance-id> --tags Key=Name,Value=AwsCertification
 ```
 
 ### List Instances
@@ -255,7 +255,7 @@ Describe a single instance:
 
 ```SH
 # Show the InstanceId, Tags and BlockDeviceMapping of a specified instance.
-$ aws ec2 describe-instances --instance-id <instance-id> --query 'Reservations[*].Instances[*].[InstanceId,BlockDeviceMappings,Tags[*].Value]'
+aws ec2 describe-instances --instance-id <instance-id> --query 'Reservations[*].Instances[*].[InstanceId,BlockDeviceMappings,Tags[*].Value]'
 [
     [
         [
@@ -283,7 +283,7 @@ Describe a tagged instance:
 
 ```SH
 # Output the InstanceId as text.
-$ aws ec2 describe-instances --filters "Name=tag:Name,Values=AwsCertification" --query 'Reservations[*].Instances[*].[InstanceId]' --output text
+aws ec2 describe-instances --filters "Name=tag:Name,Values=AwsCertification" --query 'Reservations[*].Instances[*].[InstanceId]' --output text
 i-05f452d940eded227
 ```
 
@@ -291,7 +291,7 @@ Describe multiple instances of a given type:
 
 ```SH
 # Show the InstanceId, LaunchTime and security group GroupName for all t2.micro instances.
-$ aws ec2 describe-instances --filters "Name=instance-type,Values=t2.micro"  --query 'Reservations[*].Instances[*].[InstanceId,ImageId,LaunchTime,SecurityGroups[*].GroupName]'
+aws ec2 describe-instances --filters "Name=instance-type,Values=t2.micro"  --query 'Reservations[*].Instances[*].[InstanceId,ImageId,LaunchTime,SecurityGroups[*].GroupName]'
 [
     [
         [
@@ -324,5 +324,5 @@ Terminating an instances deletes the instance. See [terminate-instances](https:/
 
 ```SH
 # Terminating one or more instances.
-$ aws ec2 terminate-instances --instance-ids <instance-id>
+aws ec2 terminate-instances --instance-ids <instance-id>
 ```

@@ -12,13 +12,13 @@ Project used to learn AWS EC2, using both the CLI API and Terraform.
 Add a user. For AWS Linux `--disabled-password` is default does not need to be provided.
 
 ```SH
-$ sudo adduser username
+sudo adduser username
 
 # Prepare SSH login for the user.
-$ mkdir .ssh
-$ chmod 700 .ssh
-$ touch .ssh/authorized_keys
-$ chmod 600 .ssh/authorized_keys
+mkdir .ssh
+chmod 700 .ssh
+touch .ssh/authorized_keys
+chmod 600 .ssh/authorized_keys
 ```
 
 Then add the public part of a key pair to `.ssh/authorized_keys`.
@@ -27,15 +27,15 @@ Delete a user:
 
 ```SH
 # Deletes a single user. The -r flag ensures deletion of the users home directory.
-$ sudo userdel -r username
+sudo userdel -r username
 ```
 
 Add a user to the sudoers group:
 
 ```SH
 # A password is required for a user to be able to sudo.
-$ sudo passwd newuser
+sudo passwd newuser
 
 # Add the user to the sudoers list. For Amazon Linux, Amazon Linux 2, RHEL, and CentOS:
-$ sudo usermod -aG wheel username
+sudo usermod -aG wheel username
 ```
